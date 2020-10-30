@@ -6,7 +6,7 @@ import os
 BT_DEV_ID = 0
 
 #AzuleIoTHuB_DeviceConectionStrings
-CONNECTION_STRING = "HostName=IoTHubDeviceTest.azure-devices.net;DeviceId=raspberryPi_test;SharedAccessKey=31Rg/S62h4/FkLdzM82Gt9stWB+JbehuPBzFIPdlitI="
+CONNECTION_STRING = "ENTER_CONNECTION_STRINGS"
 
 # time interval for sensor status evaluation (sec.)
 CHECK_SENSOR_STATE_INTERVAL_SECONDS = 300
