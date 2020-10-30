@@ -260,33 +260,33 @@ class SensorBeacon:
 
 
     def debug_print(self):
-        print "\tgateway = ", self.gateway
-        print "\ttype = ", self.sensor_type
-        print "\tbt_address = ", self.bt_address
-        print "\tseq_num = ", self.seq_num
-        print "\tval_temp = ", self.val_temp
-        print "\tval_humi = ", self.val_humi
-        print "\tval_light = ", self.val_light
-        print "\tval_uv = ", self.val_uv
-        print "\tval_pressure = ", self.val_pressure
-        print "\tval_noise = ", self.val_noise
-        print "\tval_di = ", self.val_di
-        print "\tval_heat = ", self.val_heat
-        print "\tval_ax = ", self.val_ax
-        print "\tval_ay = ", self.val_ay
-        print "\tval_az = ", self.val_az
-        print "\tval_etvoc = ", self.val_etvoc
-        print "\tval_eco2 = ", self.val_eco2
-        print "\tval_si = ", self.val_si
-        print "\tval_pga = ", self.val_pga
-        print "\tval_seismic = ", self.val_seismic
-        print "\tval_vibinfo = ", self.vibinfo
-        print "\tval_battery = ", self.val_battery
-        print "\trssi = ", self.rssi
-        print "\tdistance = ", self.distance
-        print "\ttick_register = ", self.tick_register
-        print "\ttick_last_update = ", self.tick_last_update
-        print "\tflag_active = ", self.flag_active
+        print ("\tgateway = ", self.gateway)
+        print ("\ttype = ", self.sensor_type)
+        print ("\tbt_address = ", self.bt_address)
+        print ("\tseq_num = ", self.seq_num)
+        print ("\tval_temp = ", self.val_temp)
+        print ("\tval_humi = ", self.val_humi)
+        print ("\tval_light = ", self.val_light)
+        print ("\tval_uv = ", self.val_uv)
+        print ("\tval_pressure = ", self.val_pressure)
+        print ("\tval_noise = ", self.val_noise)
+        print ("\tval_di = ", self.val_di)
+        print ("\tval_heat = ", self.val_heat)
+        print ("\tval_ax = ", self.val_ax)
+        print ("\tval_ay = ", self.val_ay)
+        print ("\tval_az = ", self.val_az)
+        print ("\tval_etvoc = ", self.val_etvoc)
+        print ("\tval_eco2 = ", self.val_eco2)
+        print ("\tval_si = ", self.val_si)
+        print ("\tval_pga = ", self.val_pga)
+        print ("\tval_seismic = ", self.val_seismic)
+        print ("\tval_vibinfo = ", self.vibinfo)
+        print ("\tval_battery = ", self.val_battery)
+        print ("\trssi = ", self.rssi)
+        print ("\tdistance = ", self.distance)
+        print ("\ttick_register = ", self.tick_register)
+        print ("\ttick_last_update = ", self.tick_last_update)
+        print ("\tflag_active = ", self.flag_active)
 
     def csv_format(self):
         str_data = str(self.tick_last_update) + "," + \
