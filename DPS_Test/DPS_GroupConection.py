@@ -69,7 +69,6 @@ for device_id in device_ids_to_keys:
     registration_result = register_device(registration_id=device_id)
     results[device_id] = registration_result
 
-
 for device_id in device_ids_to_keys:
     # The result can be directly printed to view the important details.
     registration_result = results[device_id]
