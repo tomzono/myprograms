@@ -16,7 +16,7 @@ import DPSconfig
 import socket
 
 provisioning_host = DPSconfig.provisioning_group_host
-id_scope = DPSconfig.roup_id_scope
+id_scope = DPSconfig.group_id_scope
 group_symmetric_key = DPSconfig.group_symmetric_key
 
 # These are the names of the devices that will eventually show up on the IoTHub
@@ -47,11 +47,6 @@ def derive_device_key(device_id, group_symmetric_key):
     return device_key_encoded.decode("utf-8")
 
 
-# derived_device_key has been computed already using the helper function somewhere else
-# AND NOT on this sample. Do not use the direct master key on this sample to compute device key.
-derived_device_key = derive_device_key(device_id, group_symmetric_key)
-
-device_ids_to_keys[device_id] = derived_device_key
 
 def register_device(registration_id):
 
@@ -64,6 +59,11 @@ def register_device(registration_id):
 
     return provisioning_device_client.register()
 
+
+# derived_device_key has been computed already using the helper function somewhere else
+# AND NOT on this sample. Do not use the direct master key on this sample to compute device key.
+derived_device_key = derive_device_key(device_id, group_symmetric_key)
+device_ids_to_keys[device_id] = derived_device_key
 
 for device_id in device_ids_to_keys:
     registration_result = register_device(registration_id=device_id)
@@ -101,5 +101,4 @@ for device_id in device_ids_to_keys:
         device_client.disconnect()
 
     else:
-        print(
-            "Can not send telemetry from the provisioned device with id {id}".format(id=device_id)
+        print("Can not send telemetry from the provisioned device with id {id}".format(id=device_id))
