@@ -15,18 +15,17 @@ import time
 import DPSconfig
 import socket
 
-provisioning_host = DPSconfig.provisioning_groupe_host
-id_scope = DPSconfig.group_id_scope
+provisioning_host = DPSconfig.provisioning_group_host
+id_scope = DPSconfig.roup_id_scope
+group_symmetric_key = DPSconfig.group_symmetric_key
+
 # These are the names of the devices that will eventually show up on the IoTHub
 # Please make sure that there are no spaces in these device ids.
-device_id_1 = socket.gethostname()
-
+device_id = socket.gethostname()
 # For computation of device keys
 device_ids_to_keys = {}
-
 # Keep a dictionary for results
 results = {}
-
 # NOTE : Only for illustration purposes.
 # This is how a device key can be derived from the group symmetric key.
 # This is just a helper function to show how it is done.
@@ -50,15 +49,9 @@ def derive_device_key(device_id, group_symmetric_key):
 
 # derived_device_key has been computed already using the helper function somewhere else
 # AND NOT on this sample. Do not use the direct master key on this sample to compute device key.
-derived_device_key_1 = "some_value_already_computed"
-derived_device_key_2 = "some_value_already_computed"
-derived_device_key_3 = "some_value_already_computed"
+derived_device_key = derive_device_key(device_id, group_symmetric_key)
 
-
-device_ids_to_keys[device_id_1] = derived_device_key_1
-device_ids_to_keys[device_id_2] = derived_device_key_2
-device_ids_to_keys[device_id_3] = derived_device_key_3
-
+device_ids_to_keys[device_id] = derived_device_key
 
 def register_device(registration_id):
 
@@ -110,4 +103,3 @@ for device_id in device_ids_to_keys:
     else:
         print(
             "Can not send telemetry from the provisioned device with id {id}".format(id=device_id)
-        )
