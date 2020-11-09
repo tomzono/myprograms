@@ -8,7 +8,7 @@ from azure.iot.device import IoTHubDeviceClient
 import time
 import socket
 import derive_device_key as devicekey
-import register_device as registerdevice
+import DPS_register_device as registerdevice
 
 import DPSconfig
 group_symmetric_key = DPSconfig.group_symmetric_key

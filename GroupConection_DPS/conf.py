@@ -1,6 +1,5 @@
 #!/usr/bin/python
 import os
-
 # Bluetooth adaptor
 BT_DEV_ID = 0
 # time interval for sensor status evaluation (sec.)
