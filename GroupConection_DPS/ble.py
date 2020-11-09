@@ -1,22 +1,16 @@
 #!/usr/bin/python
-
 import subprocess
 import bluetooth._bluetooth as bluez
 import struct
 
 # python library for linux bluez ##############################################
-
 # constants -------------------------------------------------------------------
-
 # OMRON company ID (Bluetooth SIG.)
 COMPANY_ID = 0x2D5
-
 # BEACON Measured power (RSSI at 1m distance)
 BEACON_MEASURED_POWER = -59
-
 # BLE OpCode group field for the LE related OpCodes.
 OGF_LE_CTL = 0x08
-
 # BLE OpCode Commands.
 OCF_LE_SET_EVENT_MASK = 0x0001
 OCF_LE_READ_BUFFER_SIZE = 0x0002
@@ -52,39 +46,32 @@ OCF_LE_TEST_END = 0x001F
 # BLE events; all LE commands result in a metaevent, specified by the subevent
 # code below.
 EVT_LE_META_EVENT = 0x3E
-
 # LE_META_EVENT subevents.
 EVT_LE_CONN_COMPLETE = 0x01
 EVT_LE_ADVERTISING_REPORT = 0x02
 EVT_LE_CONN_UPDATE_COMPLETE = 0x03
 EVT_LE_READ_REMOTE_USED_FEATURES_COMPLETE = 0x04
 EVT_LE_LTK_REQUEST = 0x05
-
 # BLE address types.
 LE_PUBLIC_ADDRESS = 0x00
 LE_RANDOM_ADDRESS = 0x01
-
 # Roles.
 LE_ROLE_MASTER = 0x00
 LE_ROLE_SLAVE = 0x01
-
 # Advertisment event types.
 LE_ADV_IND = 0x00
 LE_ADV_DIRECT_IND = 0x01
 LE_ADV_SCAN_IND = 0x02
 LE_ADV_NONCONN_IND = 0x03
 LE_ADV_SCAN_RSP = 0x04
-
 # BLE scan types.
 LE_SCAN_PASSIVE = 0x00
 LE_SCAN_ACTIVE = 0x01
-
 # BLE filter policies.
 LE_FILTER_ALLOW_ALL = 0x00
 LE_FILTER_WHITELIST_ONLY = 0x01
 LE_FILTER_DUPLICATES_OFF = 0x00
 LE_FILTER_DUPLICATES_ON = 0x01
-
 # HCI error codes.
 HCI_UNKNOWN_COMMAND = 0x01
 HCI_NO_CONNECTION = 0x02
@@ -139,7 +126,6 @@ HCI_ROLE_SWITCH_FAILED = 0x35
 HCI_EIR_TOO_LARGE = 0x36
 HCI_SIMPLE_PAIRING_NOT_SUPPORTED = 0x37
 HCI_HOST_BUSY_PAIRING = 0x38
-
 # Advertisment data format
 ADV_TYPE_FLAGS = 0x01
 ADV_TYPE_16BIT_SERVICE_UUID_MORE_AVAILABLE = 0x02
@@ -165,26 +151,21 @@ ADV_TYPE_RANDOM_TARGET_ADDRESS = 0x18
 ADV_TYPE_APPEARANCE = 0x19
 ADV_TYPE_MANUFACTURER_SPECIFIC_DATA = 0xFF
 
-
 # HCI commands. ---------------------------------------------------------------
-
 def hci_le_read_local_supported_features(sock):
     cmd_pkt = ""
     bluez.hci_send_cmd(sock, OGF_LE_CTL, OCF_LE_READ_LOCAL_SUPPORTED_FEATURES,
                        cmd_pkt)
-
 
 def hci_le_read_remote_used_features(sock, handle):
     cmd_pkt = struct.pack("<H", handle)
     bluez.hci_send_cmd(sock, OGF_LE_CTL, OCF_LE_READ_REMOTE_USED_FEATURES,
                        cmd_pkt)
 
-
 # BLE and Bluetooth use the same disconnect command.
 def hci_disconnect(sock, handle, reason=HCI_OE_USER_ENDED_CONNECTION):
     cmd_pkt = struct.pack("<HB", handle, reason)
     bluez.hci_send_cmd(sock, bluez.OGF_LINK_CTL, bluez.OCF_DISCONNECT, cmd_pkt)
-
 
 def hci_le_connect(sock, peer_bdaddr, interval=0x0004, window=0x004,
                    initiator_filter=LE_FILTER_ALLOW_ALL,
@@ -193,7 +174,6 @@ def hci_le_connect(sock, peer_bdaddr, interval=0x0004, window=0x004,
                    min_interval=0x000F, max_interval=0x000F,
                    latency=0x0000, supervision_timeout=0x0C80,
                    min_ce_length=0x0001, max_ce_length=0x0001):
-
     package_bdaddr = get_packed_bdaddr(peer_bdaddr)
     cmd_pkt = struct.pack("<HHBB", interval, window, initiator_filter,
                           peer_bdaddr_type)
@@ -203,14 +183,11 @@ def hci_le_connect(sock, peer_bdaddr, interval=0x0004, window=0x004,
                            min_ce_length, max_ce_length)
     bluez.hci_send_cmd(sock, OGF_LE_CTL, OCF_LE_CREATE_CONN, cmd_pkt)
 
-
 def hci_le_enable_scan(sock):
     hci_le_toggle_scan(sock, 0x01)
 
-
 def hci_le_disable_scan(sock):
     hci_le_toggle_scan(sock, 0x00)
-
 
 def hci_le_toggle_scan(sock, enable):
     # toggle scan
@@ -218,25 +195,20 @@ def hci_le_toggle_scan(sock, enable):
     bluez.hci_send_cmd(sock, OGF_LE_CTL, OCF_LE_SET_SCAN_ENABLE, cmd_pkt)
     # sent toggle command"
 
-
 def hci_le_set_scan_parameters(sock, scan_type=LE_SCAN_ACTIVE, interval=0x10,
                                window=0x10, own_bdaddr_type=LE_RANDOM_ADDRESS,
                                filter_type=LE_FILTER_ALLOW_ALL):
     # setting up scan
-
     # interval and window are uint_16, so we pad them with 0x0
     cmd_pkt = struct.pack("<BBBBBBB", scan_type, 0x0, interval, 0x0, window,
                           own_bdaddr_type, filter_type)
     bluez.hci_send_cmd(sock, OGF_LE_CTL, OCF_LE_SET_SCAN_PARAMETERS, cmd_pkt)
     # sent scan parameters command
 
-
 # HCI Response parsing --------------------------------------------------------
-
 def hci_le_parse_response_packet(pkt):
     """
     Parse a BLE packet.
-
     Returns a dictionary which contains the event id, length and packet type,
     and possibly additional key/value pairs that represent the parsed content
     of the packet.
@@ -288,7 +260,6 @@ def hci_le_parse_response_packet(pkt):
 
     return result
 
-
 def _handle_num_completed_packets(pkt):
     result = {}
     num_connection_handles = struct.unpack("<B", pkt[0])[0]
@@ -303,7 +274,6 @@ def _handle_num_completed_packets(pkt):
         pkt = pkt[4:]
     return result
 
-
 def _handle_inquiry_result_with_rssi(pkt):
     result = {}
     num_inquiry_results = struct.unpack("B", pkt[0])[0]
@@ -316,7 +286,6 @@ def _handle_inquiry_result_with_rssi(pkt):
         result["inquiry_results"].append({"Address": addr, "RSSI": rssi})
     return result
 
-
 def _handle_inquiry_result(pkt):
     result = {}
     num_inquiry_results = struct.unpack("B", pkt[0])[0]
@@ -327,7 +296,6 @@ def _handle_inquiry_result(pkt):
         addr = bluez.ba2str(pkt[(6 * i):(6 * i) + 6])
         result["inquiry_results"].append({"Address": addr})
     return result
-
     num_connection_handles = struct.unpack("<B", pkt[0])[0]
     pkt = pkt[1:]
     result["num_connection_handles"] = num_connection_handles
@@ -339,7 +307,6 @@ def _handle_inquiry_result(pkt):
             {"handle": handle, "num_completed_packets": completed_packets})
         pkt = pkt[4:]
     return result
-
 
 def _handle_disconn_complete(pkt):
     status, handle, reason = struct.unpack("<BHB", pkt)
@@ -377,7 +344,6 @@ def _handle_le_meta_event(pkt):
 
     return result
 
-
 def _handle_command_status(pkt):
     result = {}
     status, ncmd, opcode = struct.unpack("<BBH", pkt)
@@ -388,7 +354,6 @@ def _handle_command_status(pkt):
     result["opcode_group_field"] = ogf
     result["opcode_command_field"] = ocf
     return result
-
 
 def _handle_command_complete(pkt):
     result = {}
@@ -407,7 +372,6 @@ def _handle_command_complete(pkt):
     # values to the user should the used want to parse the return values.
     return result
 
-
 def _handle_le_connection_complete(pkt):
     result = {}
     status, handle, role, peer_bdaddr_type = struct.unpack("<BHBB", pkt[0:5])
@@ -425,7 +389,6 @@ def _handle_le_connection_complete(pkt):
     result["master_clock_accuracy"] = master_clock_accuracy
     return result
 
-
 def _handle_le_read_remote_used_features(pkt):
     result = {}
     result["features"] = []
@@ -436,7 +399,6 @@ def _handle_le_read_remote_used_features(pkt):
         result["features"].append(struct.unpack("<B", pkt[3 + i])[0])
     return result
 
-
 def _handle_le_advertising_report(pkt):
     result = {}
     num_reports = struct.unpack("<B", pkt[0])[0]
@@ -445,19 +407,15 @@ def _handle_le_advertising_report(pkt):
     result["advertising_reports"] = []
     for i in xrange(0, num_reports):
         report = {}
-
         report_event_type = struct.unpack("<B", pkt[report_pkt_offset + 1])[0]
         report["report_type_id"] = report_event_type
-
         bdaddr_type = struct.unpack("<B", pkt[report_pkt_offset + 2])[0]
         report["peer_bluetooth_address_type"] = bdaddr_type
-
         device_addr = packed_bdaddr_to_string(
             pkt[report_pkt_offset + 3:report_pkt_offset + 9])
         report["peer_bluetooth_address"] = device_addr.upper()
         report["peer_bluetooth_address_s"] = \
             short_bt_address(report["peer_bluetooth_address"])
-
         report_data_length, = struct.unpack("<B", pkt[report_pkt_offset + 9])
         report["report_metadata_length"] = report_data_length
 
@@ -496,8 +454,6 @@ def _handle_le_advertising_report(pkt):
         result["advertising_reports"].append(report)
 
     return result
-
-
 # utility function ------------------------------------------------------------
 
 def get_packed_bdaddr(bdaddr_string):
@@ -508,15 +464,12 @@ def get_packed_bdaddr(bdaddr_string):
         packable_addr.append(int(b, 16))
     return struct.pack("<BBBBBB", *packable_addr)
 
-
 def packed_bdaddr_to_string(bdaddr_packed):
     return ':'.join('%02x' % i for i in struct.unpack("<BBBBBB",
                                                       bdaddr_packed[::-1]))
 
-
 def short_bt_address(btAddr):
     return ''.join(btAddr.split(':'))
-
 
 def packet_as_hex_string(pkt, flag_with_spacing=False,
                          flag_force_capitalize=False):
@@ -541,7 +494,6 @@ def ogf_and_ocf_from_opcode(opcode):
     ocf = opcode & 0x03FF
     return (ogf, ocf)
 
-
 def reset_hci():
     # resetting bluetooth dongle
     cmd = "sudo hciconfig hci0 down"
@@ -549,12 +501,9 @@ def reset_hci():
     cmd = "sudo hciconfig hci0 up"
     subprocess.call(cmd, shell=True)
 
-
 def get_companyid(pkt):
     return (struct.unpack("<B", pkt[1])[0] << 8) | \
         struct.unpack("<B", pkt[0])[0]
-
-
 # verify received beacon packet format
 def verify_beacon_packet(report):
     result = False
@@ -588,7 +537,6 @@ def verify_beacon_packet(report):
 
     result = True
     return result
-
 
 # classify beacon type sent from the sensor
 def classify_beacon_packet(report):

@@ -3,17 +3,13 @@
 import math
 import conf
 import datetime
-
 import str_util
 import ble
-
 import requests
 import json
 
-# Env Senor (OMRON 2JCIE-BL01 Broadcaster) ####################################
-
+# EnvSenor(OMRON 2JCIE-BL01 Broadcaster) ####################################
 class SensorBeacon:
-
     # local fields from raw data
     bt_address = ""
     seq_num = 0
@@ -31,28 +27,22 @@ class SensorBeacon:
     val_battery = 0.0
     val_etvoc = 0.0
     val_eco2 = 0.0
-
     val_pga = 0.0
     val_si = 0.0
     val_seismic = 0.0
     vibinfo = "-"
-
     rssi = -127
     distance = 0
     tick_last_update = 0
     tick_register = 0
-
     flag_active = False
-
     sensor_type = "UNKNOWN"
     gateway = "UNKNOWN"
 
     def __init__(self, bt_address_s, sensor_type_s, gateway_s, pkt):
         self.bt_address = bt_address_s
-
         if ((sensor_type_s == "IM") or (sensor_type_s == "EP")):
             self.seq_num = str_util.c2B(pkt[7])
-
             self.val_temp = str_util.bytes2short(
                 str_util.c2B(pkt[9]), str_util.c2B(pkt[8])) / 100.0
             self.val_humi = str_util.bytes2ushort(
@@ -140,11 +130,9 @@ class SensorBeacon:
         self.rssi = str_util.c2b(pkt[-1])
         self.distance = self.return_accuracy(
             self.rssi, ble.BEACON_MEASURED_POWER)
-
         self.tick_register = datetime.datetime.now()
         self.tick_last_update = self.tick_register
         self.flag_active = True
-
         self.sensor_type = sensor_type_s
         self.gateway = gateway_s
 
@@ -154,13 +142,11 @@ class SensorBeacon:
             return -1
         if power == 0:
             return -1
-
         ratio = RSSI * 1.0 / abs(power)
         if ratio < 1.0:
             return pow(ratio, 8.0)
         accuracy = 0.69976 * pow(ratio, 7.7095) + 0.111
         # accuracy = 0.89976 * pow(ratio, 7.7095) + 0.111
-
         return accuracy
 
     def check_diff_seq_num(self, sensor_beacon):
@@ -224,8 +210,6 @@ class SensorBeacon:
                     0.17 - abs(temp - 30) * 0.09) / 1.135
         return wbgt
 
-
-
     def forward_vantiq(self):
         data = {
             "gateway": self.gateway,
@@ -257,7 +241,6 @@ class SensorBeacon:
         #requests.post(conf.VANTIQ_END_POINT, headers=conf.VANTIQ_HEADERS, data=json.dumps(data))
         jsondata = json.dumps(data)
         return jsondata
-
 
     def debug_print(self):
         print ("\tgateway = ", self.gateway)
@@ -315,7 +298,6 @@ class SensorBeacon:
                    str(self.val_seismic) + "," + \
                    str(self.vibinfo)
         return str_data
-
 
 def csv_header():
     str_head = "Time" + "," + \

@@ -1,25 +1,19 @@
 #!/usr/bin/python
-
 import struct
-
 
 def c2B(char):  # character to Byte conversion
     return struct.unpack("B", char)[0]
 
-
 def c2b(char):  # character to signed char conversion
     return struct.unpack("b", char)[0]
-
 
 def bytes2ushort(hi, lo):
     ushort_val = ((hi << 8) | lo)
     return ushort_val
 
-
 def bytes2uint32(highest, high, low, lowest):
     uint32_val = ((highest << 24) | (high << 16) | (low << 8) | lowest)
     return uint32_val
-
 
 def bytes2short(hi, lo):
     val = (hi << 8) | lo
@@ -30,7 +24,6 @@ def bytes2short(hi, lo):
     else:
         short_val = val
     return short_val
-
 
 def ushort2short(val):
     if ((val & 0x8000) == 0x8000):
