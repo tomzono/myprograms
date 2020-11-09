@@ -14,6 +14,7 @@ import uuid
 import time
 import DPSconfig
 import socket
+import derive_device_key as devicekey
 
 provisioning_host = DPSconfig.provisioning_group_host
 id_scope = DPSconfig.group_id_scope
@@ -33,21 +34,6 @@ results = {}
 # Follow the following method to compute the device key somewhere else.
 
 
-def derive_device_key(device_id, group_symmetric_key):
-    """
-    The unique device ID and the group master key should be encoded into "utf-8"
-    After this the encoded group master key must be used to compute an HMAC-SHA256 of the encoded registration ID.
-    Finally the result must be converted into Base64 format.
-    The device key is the "utf-8" decoding of the above result.
-    """
-    message = device_id.encode("utf-8")
-    signing_key = base64.b64decode(group_symmetric_key.encode("utf-8"))
-    signed_hmac = hmac.HMAC(signing_key, message, hashlib.sha256)
-    device_key_encoded = base64.b64encode(signed_hmac.digest())
-    return device_key_encoded.decode("utf-8")
-
-
-
 def register_device(registration_id):
 
     provisioning_device_client = ProvisioningDeviceClient.create_from_symmetric_key(
@@ -62,7 +48,7 @@ def register_device(registration_id):
 
 # derived_device_key has been computed already using the helper function somewhere else
 # AND NOT on this sample. Do not use the direct master key on this sample to compute device key.
-derived_device_key = derive_device_key(device_id, group_symmetric_key)
+derived_device_key = devicekey.derive_device_key(device_id, group_symmetric_key)
 device_ids_to_keys[device_id] = derived_device_key
 
 for device_id in device_ids_to_keys:
