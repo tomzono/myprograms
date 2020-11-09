@@ -16,6 +16,7 @@ import DPSconfig
 import socket
 import derive_device_key as devicekey
 
+
 provisioning_host = DPSconfig.provisioning_group_host
 id_scope = DPSconfig.group_id_scope
 group_symmetric_key = DPSconfig.group_symmetric_key
@@ -27,32 +28,20 @@ device_id = socket.gethostname()
 device_ids_to_keys = {}
 # Keep a dictionary for results
 results = {}
-# NOTE : Only for illustration purposes.
-# This is how a device key can be derived from the group symmetric key.
-# This is just a helper function to show how it is done.
-# Please don't directly store the master group key on the device.
-# Follow the following method to compute the device key somewhere else.
 
+derived_device_key = devicekey.derive_device_key(device_id, group_symmetric_key)
 
 def register_device(registration_id):
-
     provisioning_device_client = ProvisioningDeviceClient.create_from_symmetric_key(
         provisioning_host=provisioning_host,
         registration_id=registration_id,
         id_scope=id_scope,
-        symmetric_key=device_ids_to_keys[registration_id],
+        symmetric_key=derived_device_key,
     )
-
     return provisioning_device_client.register()
 
-
-# derived_device_key has been computed already using the helper function somewhere else
-# AND NOT on this sample. Do not use the direct master key on this sample to compute device key.
-derived_device_key = devicekey.derive_device_key(device_id, group_symmetric_key)
-device_ids_to_keys[device_id] = derived_device_key
-
 for device_id in device_ids_to_keys:
-    registration_result = register_device(registration_id=device_id)
+    registration_result =register_device(registration_id=device_id)
     results[device_id] = registration_result
 
 for device_id in device_ids_to_keys:
