@@ -1,7 +1,5 @@
 import os
-import base64
-import hmac
-import hashlib
+
 from azure.iot.device import ProvisioningDeviceClient
 from azure.iot.device import IoTHubDeviceClient
 from azure.iot.device import Message
