@@ -18,8 +18,6 @@ import derive_device_key as devicekey
 import register_device as registerdevice
 
 
-provisioning_host = DPSconfig.provisioning_group_host
-id_scope = DPSconfig.group_id_scope
 group_symmetric_key = DPSconfig.group_symmetric_key
 
 device_id = socket.gethostname()
