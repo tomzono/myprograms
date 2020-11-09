@@ -4,32 +4,21 @@
 # license information.
 # --------------------------------------------------------------------------
 import os
-import base64
-import hmac
-import hashlib
-from azure.iot.device import ProvisioningDeviceClient
 from azure.iot.device import IoTHubDeviceClient
-from azure.iot.device import Message
-import uuid
 import time
-import DPSconfig
 import socket
 import derive_device_key as devicekey
 import register_device as registerdevice
 
-
+import DPSconfig
 group_symmetric_key = DPSconfig.group_symmetric_key
 
-device_id = socket.gethostname()
 
+device_id = socket.gethostname()
 results = {}
 
 derived_device_key = devicekey.derive_device_key(device_id, group_symmetric_key)
-
 registration_result =registerdevice.register_device(device_id,derived_device_key)
-
-
-
 
 print(registration_result)
 print("The status was :-")

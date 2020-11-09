@@ -3,7 +3,6 @@ import base64
 import hmac
 import hashlib
 
-
 def derive_device_key(device_id, group_symmetric_key):
     """
     The unique device ID and the group master key should be encoded into "utf-8"
