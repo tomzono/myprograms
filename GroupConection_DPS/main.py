@@ -304,6 +304,11 @@ if __name__ == "__main__":
                 print_sensor_state()
                 flag_update_sensor_status = False
 
+            # get the twin
+            twin = client.get_twin()
+            print("Twin document:")
+            print("{}".format(twin))
+
 
 
     except KeyboardInterrupt:
