@@ -12,8 +12,7 @@ import json
 import random
 import time
 from azure.iot.device import IoTHubDeviceClient, Message
-
-import derive_device_key as devicekey
+import DPS_derive_device_key as devicekey
 import DPS_register_device as registerdevice
 
 import DPSconfig
@@ -47,7 +46,7 @@ def iothub_client_init():
             hostname=registration_result.registration_state.assigned_hub,
             device_id=registration_result.registration_state.device_id,
         )
-    return device_client.connect()
+    return device_client
 
 #Send message to IoTHub
 def iothub_SendMessage(str):
