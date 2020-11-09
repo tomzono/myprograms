@@ -15,31 +15,20 @@ import time
 import DPSconfig
 import socket
 import derive_device_key as devicekey
+import register_device as registerdevice
 
 
 provisioning_host = DPSconfig.provisioning_group_host
 id_scope = DPSconfig.group_id_scope
 group_symmetric_key = DPSconfig.group_symmetric_key
 
-# These are the names of the devices that will eventually show up on the IoTHub
-# Please make sure that there are no spaces in these device ids.
 device_id = socket.gethostname()
-# For computation of device keys
-# Keep a dictionary for results
+
 results = {}
 
 derived_device_key = devicekey.derive_device_key(device_id, group_symmetric_key)
 
-def register_device(registration_id):
-    provisioning_device_client = ProvisioningDeviceClient.create_from_symmetric_key(
-        provisioning_host=provisioning_host,
-        registration_id=registration_id,
-        id_scope=id_scope,
-        symmetric_key=derived_device_key,
-    )
-    return provisioning_device_client.register()
-
-registration_result =register_device(registration_id=device_id)
+registration_result =registerdevice.register_device(device_id,derived_device_key)
 
 
 
